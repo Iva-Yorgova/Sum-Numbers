@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sum Numbers</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body onload="symbolsAnimation()">
+
+    <div class="main-box">
+
+        <div class="container">
+
+            <div class="art-box">
+
+                <div class="info-box">
+                    <h4 class="result-title">The initial number:</h4>
+                    <h1 class="initial-num-value">457</h1>
+                </div>
+
+                <div class="sum-box">
+                    <h4 class="sum-info">Sum progress:</h4>
+                    <h1 class="sum-value"></h1>
+                </div>
+
+                <div class="result-box">
+                    <h4 class="result-info">The sum of the entered numbers:</h4>
+                    <h1 class="result-text">457</h1>
+                    <button onclick="restart()" class="start-btn">START<span class="arrow">></span></button>
+                </div>
+
+                <div class="initial-number">
+                    <span class="arrow-1">></span>
+                    <label class="small">Initial number:</label>
+                    <input type="number" id="initial-num">
+                    <button onclick="checkInput1()" class="next-btn">NEXT<span class="arrow">></span></button>
+                </div>
+
+                <div class="integers">
+                    <p class="task-info">Add integers until their sum becomes greater than or equal to the initial
+                        number:</p>
+                    <input type="number" id="next-num">
+                    <button onclick="checkInput2()" class="add-btn">ADD<span class="plus-symbol">+</span></button>
+                </div>
+
+                <h1 class="title-1">Sum</h1>
+                <h1 class="title-1a">Numbers</h1>
+
+                <div class="digits-box">
+                    <img src="./images/9.png" class="digit">
+                    <img src="./images/plus.png" class="plus">
+                </div>
+
+                <div class="gradient-box">
+                    <div class="gradient"></div>
+                    <div class="gradient-square"></div>
+                    <div class="gray-vertical"></div>
+                    <div class="blue-vertical"></div>
+                    <div class="gray-horisontal"></div>
+                    <div class="blue-horisontal"></div>
+                    <div class="gray-horisontal-small"></div>
+                    <div class="gray-horisontal-smaller"></div>
+                    <div class="dark-gray-horisontal"></div>
+                    <img src="./images/numbers.jpg" class="numbers-art">
+                </div>
+
+                <div onclick="restart()" class="restart-div">RESTART</div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+<script src="../vendor/jquery.waypoints.min.js"></script>
+<script src="../vendor/jquery.counterup.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="./sum-numbers.js"></script>
+
+<script>
+
+    let container = document.querySelector(".container");
+    let integersInput = document.querySelector(".integers");
+    let initialNumInput = document.querySelector(".initial-number");
+    let infoBox = document.querySelector(".info-box");
+    let resultBox = document.querySelector(".result-box");
+    let resultText = document.querySelector(".result-text");
+    let sumInfo = document.querySelector(".sum-info");
+    let digit = document.querySelector(".digit");
+    let plus = document.querySelector(".plus");
+    let title1 = document.querySelector(".title-1");
+    let title1a = document.querySelector(".title-1a");
+
+    let initialNumber;
+    let integersSum = 0;
+    let inputArray = [];
+
+    function execute() {
+        // Intercept console.log to capture the printed result
+        let result = "";
+        const originalConsoleLog = console.log.bind(console);
+        console.log = (...args) => {
+            result = result + args.join(" ") + "\r\n";
+            originalConsoleLog(...args);
+        }
+
+        // Execute the solution code
+        let executionResult = "";
+        try {
+            executionResult = sumNumbers(inputArray);
+        } catch (e) {
+            return;
+        }
+
+        if (executionResult)
+            result = result + executionResult + "\r\n";
+
+        // Visualize the output
+        resultText.innerText = result;
+
+    }
+
+    function checkInput1() {
+
+        let num1 = Number(document.querySelector("#initial-num").value);
+
+        if (num1 > 1000000 || num1 < 1) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid input!',
+                text: 'Please, provide a number between 1 and 1000000!',
+            });
+            return;
+        } else {
+            showIntegersInput();
+        }
+
+    }
+
+    function checkInput2() {
+
+        let num2 = Number(document.querySelector("#next-num").value);
+
+        if (num2 > 1000000 || num2 < 1) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid input!',
+                text: 'Please, provide a number between 1 and 1000000!',
+            });
+            return;
+        } else {
+            addInteger();
+        }
+
+    }
+
+    function restart() {
+
+        inputArray.length = 0;
+        integersSum = 0;
+        document.querySelector("#initial-num").value = "";
+        document.querySelector("#next-num").value = "";
+        document.querySelector('.sum-value').innerText = "";
+        initialNumInput.classList.remove('hide-initial-number');
+        resultText.innerText = "";
+        resultBox.classList.remove('show-result-box');
+        infoBox.style = "opacity:0";
+        integersInput.classList.remove('show-integers');
+        sumInfo.style = "opacity:0";
+
+    }
+
+    function showIntegersInput() {
+
+        integersInput.classList.add('show-integers');
+        initialNumInput.classList.add('hide-initial-number');
+
+        initialNumber = Number(document.querySelector("#initial-num").value);
+        infoBox.style = "opacity:1";
+        document.querySelector('.initial-num-value').innerText = initialNumber;
+
+        // Adding elements in the array:
+        inputArray.push(initialNumber);
+
+    }
+
+    function addInteger() {
+
+        let integer = Number(document.querySelector("#next-num").value);
+        integersSum += integer;
+
+        // Adding elements in the array:
+        inputArray.push(integer);
+
+        if (integersSum >= initialNumber) {
+            integersInput.classList.remove('show-integers');
+            resultBox.classList.add('show-result-box');
+            console.log(inputArray);
+            document.querySelector('.sum-value').innerText = "";
+            sumInfo.style = "opacity:0";
+            execute();
+        } else {
+            document.querySelector("#next-num").value = "";
+            document.querySelector('.sum-value').innerText = integersSum;
+            sumInfo.style = "opacity:1";
+        }
+
+    }
+
+    function symbolsAnimation() {
+
+        digit.classList.add('show-digit');
+        plus.classList.add('show-plus');
+        title1a.classList.add('show-title-1a');
+        title1.classList.add('show-title-1');
+
+    }
+
+</script>
+
+</html>
