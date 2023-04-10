@@ -8,6 +8,5 @@ function sumNumbers(input) {
         sum += currentNum;
         index++;
     }
-    let b = 7;
     console.log(sum);
 }
