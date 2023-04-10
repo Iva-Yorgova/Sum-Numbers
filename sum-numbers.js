@@ -8,7 +8,7 @@ function sumNumbers(input) {
         sum += currentNum;
         index++;
     }
-    let a = 7;
+    let a = 12;
 
     console.log(sum);
 }
