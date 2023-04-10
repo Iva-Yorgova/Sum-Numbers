@@ -9,6 +9,7 @@ function sumNumbers(input) {
         index++;
     }
     let a = 12;
+    let b = 7;
 
     console.log(sum);
 }
